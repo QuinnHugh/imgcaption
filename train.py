@@ -9,8 +9,9 @@ from build_vocab import Vocabulary
 from model import EncoderCNN, DecoderRNN
 from torch.nn.utils.rnn import pack_padded_sequence
 from torchvision import transforms
+import time
 
-
+logfile = open("densenet.log","w")
 
 # Device configuration
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -40,6 +41,7 @@ def main(args):
     # Build the models
     encoder = EncoderCNN(args.embed_size).to(device)
     decoder = DecoderRNN(args.embed_size, args.hidden_size, len(vocab), args.num_layers).to(device)
+    print(encoder,file = logfile)
     
     # Loss and optimizer
     criterion = nn.CrossEntropyLoss()
@@ -68,8 +70,8 @@ def main(args):
 
             # Print log info
             if i % args.log_step == 0:
-                print('Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}, Perplexity: {:5.4f}'
-                      .format(epoch, args.num_epochs, i, total_step, loss.item(), np.exp(loss.item()))) 
+                print('{} > Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}, Perplexity: {:5.4f}'
+                      .format(time.strftime("%m/%d %H:%M:%S"), epoch, args.num_epochs, i, total_step, loss.item(), np.exp(loss.item()))) 
                 
             # Save the model checkpoints
             if (i+1) % args.save_step == 0:

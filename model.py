@@ -10,9 +10,8 @@ class EncoderCNN(nn.Module):
         """Load the Densenet 161 """
         super(EncoderCNN, self).__init__()
         densenet = models.densenet161(pretrained=True)
-        modules = list(densenet.children())[0:-1]
-        self.densenet = nn.Sequential(*modules)
-        self.linear = nn.Linear(densenet.fc.in_features, embed_size)
+        self.densenet = densenet
+        self.linear = nn.Linear(densenet.classifier.out_features, embed_size)
         self.bn = nn.BatchNorm1d(embed_size, momentum=0.01)
         
         

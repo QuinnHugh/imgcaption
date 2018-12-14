@@ -7,19 +7,19 @@ from torch.nn.utils.rnn import pack_padded_sequence
 
 class EncoderCNN(nn.Module):
     def __init__(self, embed_size):
-        """Load the inception_v3 """
+        """Load the Densenet 161 """
         super(EncoderCNN, self).__init__()
-        inception = models.inception_v3(pretrained=True)
-        modules = list(inception.children())[0:-1]
-        self.inception = nn.Sequential(*modules)
-        self.linear = nn.Linear(inception.fc.in_features, embed_size)
+        densenet = models.densenet161(pretrained=True)
+        modules = list(densenet.children())[0:-1]
+        self.densenet = nn.Sequential(*modules)
+        self.linear = nn.Linear(densenet.fc.in_features, embed_size)
         self.bn = nn.BatchNorm1d(embed_size, momentum=0.01)
         
         
     def forward(self, images):
         """Extract feature vectors from input images."""
         with torch.no_grad():
-            features = self.inception(images)
+            features = self.densenet(images)
         features = features.view(features.size(0), -1)
         features = self.bn(self.linear(features))
         return features

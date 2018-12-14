@@ -36,7 +36,7 @@ if __name__ == '__main__':
                         help='directory for train images')
     parser.add_argument('--output_dir', type=str, default='./data/resized2014/',
                         help='directory for saving resized images')
-    parser.add_argument('--image_size', type=int, default=256,
+    parser.add_argument('--image_size', type=int, default=300,
                         help='size for image after processing')
     args = parser.parse_args()
     main(args)

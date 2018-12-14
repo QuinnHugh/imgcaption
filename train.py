@@ -11,6 +11,7 @@ from torch.nn.utils.rnn import pack_padded_sequence
 from torchvision import transforms
 
 
+
 # Device configuration
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
@@ -56,6 +57,7 @@ def main(args):
             targets = pack_padded_sequence(captions, lengths, batch_first=True)[0]
             
             # Forward, backward and optimize
+            torch.cuda.empty_cache()
             features = encoder(images)
             outputs = decoder(features, captions, lengths)
             loss = criterion(outputs, targets)
